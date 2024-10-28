@@ -12,6 +12,7 @@ Welcome to the JavaScript CRUD Operations guide! This document provides a compre
 ## JavaScript Functions
 
 ```javascript
+// Fetches posts for a specific user and displays them in the HTML.
 function getPosts() {
     const baseurl = "https://tarmeezAcademy.com/api/v1/";
     const urlparams = new URLSearchParams(window.location.search);
@@ -31,7 +32,7 @@ function getPosts() {
 
                 let postTitle = post.title || "";
 
-                // Conditional buttons
+                // Conditional buttons for edit and delete
                 const editButton = isAuthor ? `<button id="edit-btn" class='btn btn-secondary btn-sm' onclick="editPostBtnClicked('${encodeURIComponent(JSON.stringify(post))}')">Edit</button>` : '';
                 const deleteButton = isAuthor ? `<button id="delete-btn" class='btn btn-danger btn-sm ms-2' onclick="deletePostBtnClicked('${encodeURIComponent(JSON.stringify(post))}')">Delete</button>` : '';
 
@@ -80,6 +81,7 @@ function getPosts() {
         });
 }
 
+// Handles the click event for editing a post.
 function editPostBtnClicked(postObject) {
     const postIdInput = document.getElementById("post-id-input");
     const postId = postIdInput ? postIdInput.value.trim() : '';
@@ -98,6 +100,7 @@ function editPostBtnClicked(postObject) {
     modalPost.toggle();
 }
 
+// Creates or updates a post based on whether the post ID is present.
 function creatingPost() {
     const baseurl = "https://tarmeezAcademy.com/api/v1"; // Ensure there's no trailing slash
 
@@ -120,7 +123,7 @@ function creatingPost() {
     };
 
     if (isCreate) {
-        let url = `${baseurl}/posts`; // Default URL
+        let url = `${baseurl}/posts`; // Default URL for creating a new post
         // Creating a new post
         axios.post(url, formData, { headers: headers })
             .then((response) => {
@@ -156,6 +159,7 @@ function creatingPost() {
     }
 }
 
+// Handles the click event for deleting a post.
 function deletePostBtnClicked(postObjectDelete) {
     let post = JSON.parse(decodeURIComponent(postObjectDelete));
     console.log(post);
@@ -165,6 +169,7 @@ function deletePostBtnClicked(postObjectDelete) {
     modalPost.toggle();
 }
 
+// Deletes a post after confirmation.
 function deletePost() {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -183,7 +188,10 @@ function deletePost() {
     axios.delete(url, { headers: headers })
         .then((response) => {
             console.log("Post deleted successfully:", response.data);
-            showAlert("Post has been deleted", "success");
+            const modal = document.getElementById("deletemodal");
+            const modalInstance = bootstrap.Modal.getInstance(modal);
+            modalInstance.hide();
+            showAlert("Post deleted successfully", "success");
             getPosts();
         })
         .catch((error) => {
