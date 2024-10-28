@@ -11,6 +11,8 @@ Welcome to the JavaScript CRUD Operations guide! This document provides a compre
 
 ## JavaScript Functions
 
+##getposts
+
 ```javascript
 // Fetches posts for a specific user and displays them in the HTML.
 function getPosts() {
@@ -80,6 +82,12 @@ function getPosts() {
             console.log(error);
         });
 }
+```
+
+
+##editpostbtnclicked
+
+```javascript
 
 // Handles the click event for editing a post.
 function editPostBtnClicked(postObject) {
@@ -99,8 +107,11 @@ function editPostBtnClicked(postObject) {
     let modalPost = new bootstrap.Modal(document.getElementById("postmodal"), {});
     modalPost.toggle();
 }
+```
 
-// Creates or updates a post based on whether the post ID is present.
+ Creates or updates a post based on whether the post ID is present.
+```javascript
+
 function creatingPost() {
     const baseurl = "https://tarmeezAcademy.com/api/v1"; // Ensure there's no trailing slash
 
@@ -158,6 +169,10 @@ function creatingPost() {
         });
     }
 }
+
+```
+ Creates or updates a post based on whether the post ID is present.
+```javascript
 
 // Handles the click event for deleting a post.
 function deletePostBtnClicked(postObjectDelete) {
