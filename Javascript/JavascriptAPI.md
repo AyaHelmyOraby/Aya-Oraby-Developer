@@ -1,22 +1,19 @@
-# CRUD Post Management Application
+# JavaScript CRUD Operations
 
-A JavaScript web application for managing user posts with CRUD (Create, Read, Update, Delete) functionality, using the TarmeezAcademy API.
+Welcome to the JavaScript CRUD Operations guide! This document provides a comprehensive overview of functions to create, read, update, and delete posts using JavaScript and Axios.
 
-## Features
+## Table of Contents
+1. [getPosts](#getposts)
+2. [editPostBtnClicked](#editpostbtnclicked)
+3. [creatingPost](#creatingpost)
+4. [deletePostBtnClicked](#deletepostbtnclicked)
+5. [deletePost](#deletepost)
 
-- **Get Posts**: Fetches and displays posts for a specific user.
-- **Create Post**: Allows users to add new posts with a title, body, and image.
-- **Update Post**: Allows users to modify their existing posts.
-- **Delete Post**: Allows users to delete their posts.
-
-## Code Overview
-
-### 1. Fetch and Display Posts
-
-The `getposts` function fetches posts for a user, checks if the current user is the post author, and conditionally displays **Edit** and **Delete** buttons.
+## getPosts
+Fetches posts for a specific user and displays them in the HTML.
 
 ```javascript
-function getposts() {
+function getPosts() {
     const baseurl = "https://tarmeezAcademy.com/api/v1/";
     const urlparams = new URLSearchParams(window.location.search);
     const userId = urlparams.get("userid");
@@ -24,43 +21,62 @@ function getposts() {
     axios.get(`${baseurl}users/${userId}/posts`)
         .then(function(response) {
             const posts = response.data.data;
-            const user = getcurrentuser();
-            const userId = user ? user.id : null;
+            const user = getCurrentUser(); // Get the current logged-in user
+            const userId = user ? user.id : null; // Current user ID
+
             document.getElementById("user-posts").innerHTML = "";
 
             for (const post of posts) {
                 const author = post.author;
-                const isAuthor = userId && post.author.id === userId;
+                const isAuthor = userId && post.author.id === userId; // Check if the current user is the author
 
-                let posttitle = post.title || "";
-                const editButton = isAuthor ? `<button class='btn btn-secondary btn-sm' onclick="editpostbtnlicked('${encodeURIComponent(JSON.stringify(post))}')">Edit</button>` : '';
-                const deleteButton = isAuthor ? `<button class='btn btn-danger btn-sm ms-2' onclick="deletepostbtnlicked('${encodeURIComponent(JSON.stringify(post))}')">Delete</button>` : '';
+                let postTitle = post.title || "";
+
+                // Conditional buttons
+                const editButton = isAuthor ? `<button id="edit-btn" class='btn btn-secondary btn-sm' onclick="editPostBtnClicked('${encodeURIComponent(JSON.stringify(post))}')">Edit</button>` : '';
+                const deleteButton = isAuthor ? `<button id="delete-btn" class='btn btn-danger btn-sm ms-2' onclick="deletePostBtnClicked('${encodeURIComponent(JSON.stringify(post))}')">Delete</button>` : '';
 
                 let content = `
                 <div class="card shadow">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
-                            <img src="${author.profile_image}" alt="" style="width:40px; height:40px;" class="rounded-circle border border-2">
+                            <img class="rounded-circle border border-2" src="${author.profile_image}" alt="" style="width:40px; height:40px;">
                             <b class="ms-2">${author.username}</b>
                         </div>
-                        <div>${editButton} ${deleteButton}</div>
+                        <div>
+                            ${editButton}
+                            ${deleteButton}
+                        </div>
                     </div>
-                    <div class="card-body" onclick="postclicked(${post.id})">
-                        <img src="${post.image}" alt="Post image" class="w-100 mb-3">
+                    <div class="card-body" onclick="postClicked(${post.id})" style="cursor:pointer">
+                        <img class="w-100 mb-3" src="${post.image}" alt="Post image">
                         <h6 class="text-muted">${post.created_at}</h6>
-                        <h5 class="card-title">${posttitle}</h5>
+                        <h5 class="card-title">${postTitle}</h5>
                         <p class="card-text">${post.body}</p>
+                        <hr>
                         <div class="d-flex align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen me-2" viewBox="0 0 16 16">
+                                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+                            </svg>
                             <span>(${post.comments_count}) Comments</span>
                             <span id="post-tags-${post.id}" class="ms-2"></span>
                         </div>
                     </div>
-                </div>`;
+                </div>
+                `;
 
                 document.getElementById("user-posts").innerHTML += content;
-                const currentposttagID = `post-tags-${post.id}`;
-                document.getElementById(currentposttagID).innerHTML = post.tags.map(tag => `<button class="btn btn-sm rounded-5" style="background-color: grey; color: white;">${tag.name}</button>`).join("");
+
+                const currentPostTagID = `post-tags-${post.id}`;
+                document.getElementById(currentPostTagID).innerHTML = "";
+
+                for (const tag of post.tags) {
+                    let contentTags = `<button class="btn btn-sm rounded-5" style="color: white; background-color: grey"> ${tag.name} </button>`;
+                    document.getElementById(currentPostTagID).innerHTML += contentTags;
+                }
             }
         })
-        .catch(error => console.log(error));
+        .catch(function(error) {
+            console.log(error);
+        });
 }
