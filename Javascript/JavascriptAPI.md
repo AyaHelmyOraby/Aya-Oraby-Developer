@@ -80,3 +80,142 @@ function getPosts() {
             console.log(error);
         });
 }
+editPostBtnClicked
+Handles the click event for editing a post.
+
+javascript
+Copy code
+function editPostBtnClicked(postObject) {
+    const postIdInput = document.getElementById("post-id-input");
+    const postId = postIdInput ? postIdInput.value.trim() : '';
+  
+    let post = JSON.parse(decodeURIComponent(postObject));
+    console.log("clicked");
+    console.log(post);
+     
+    document.getElementById("submit-post").innerHTML = "Update";
+    document.getElementById("post-title-label").innerHTML = "Edit Post";
+    document.getElementById("post-id-input").value = post.id;
+    document.getElementById("post-address").value = post.title;
+    document.getElementById("content-post").value = post.body;
+
+    let modalPost = new bootstrap.Modal(document.getElementById("postmodal"), {});
+    modalPost.toggle();
+}
+creatingPost
+Creates or updates a post based on the input fields.
+
+javascript
+Copy code
+function creatingPost() {
+    const baseurl = "https://tarmeezAcademy.com/api/v1"; // Ensure there's no trailing slash
+
+    const postIdInput = document.getElementById("post-id-input");
+    const postId = postIdInput ? postIdInput.value.trim() : '';
+    const isCreate = !postId; // Determine if creating a new post
+
+    const title = document.getElementById("post-address").value;
+    const body = document.getElementById("content-post").value;
+    const image = document.getElementById("image-post").files[0];
+    const token = localStorage.getItem("token");
+
+    let formData = new FormData();
+    formData.append("body", body);
+    formData.append("title", title);
+    formData.append("image", image);
+
+    const headers = {
+        "Authorization": `Bearer ${token}`
+    };
+
+    if (isCreate) {
+        let url = `${baseurl}/posts`; // Default URL
+        // Creating a new post
+        axios.post(url, formData, { headers: headers })
+            .then((response) => {
+                console.log("Post created successfully:", response.data); // Log response data
+                const modal = document.getElementById("postmodal");
+                const modalInstance = bootstrap.Modal.getInstance(modal);
+                modalInstance.hide();
+                showAlert("New Post Has Been Created", "success");
+                getPosts();
+            })
+            .catch((error) => {
+                const message = error.response?.data?.message || 'An error occurred';
+                showAlert(message, "danger");
+            });
+    } else {
+        formData.append("_method", "put");
+        url = `${baseurl}/posts/${postId}`;
+        
+        axios.post(url, formData, {
+            headers: headers
+        })
+        .then((response) => {
+            const modal = document.getElementById("postmodal");
+            const modalInstance = bootstrap.Modal.getInstance(modal);
+            modalInstance.hide();
+            showAlert("Post updated successfully", "success");
+            getPosts();
+        })
+        .catch((error) => {
+            const message = error.response.data.message;
+            showAlert(message, "danger");
+        });
+    }
+}
+deletePostBtnClicked
+Handles the click event for deleting a post.
+
+javascript
+Copy code
+function deletePostBtnClicked(postObjectDelete) {
+    let post = JSON.parse(decodeURIComponent(postObjectDelete));
+    console.log(post);
+    document.getElementById("post-id-delete").value = post.id;
+
+    let modalPost = new bootstrap.Modal(document.getElementById("deletemodal"), {});
+    modalPost.toggle();
+}
+deletePost
+Deletes a post based on the post ID.
+
+javascript
+Copy code
+function deletePost() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        console.error("Token not found. User might not be logged in.");
+        showAlert("You're not authorized to delete this post. Please log in.", 'danger');
+        return;
+    }
+
+    const postId = document.getElementById("post-id-delete").value;
+    const url = `${baseurl}posts/${postId}`;
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    };
+
+    axios.delete(url, { headers: headers })
+        .then((response) => {
+            console.log(response.data);
+            showAlert("Post has been deleted successfully", "success");
+            getPosts(); // Refresh the list of posts
+        })
+        .catch((error) => {
+            console.error(error);
+            const message = error.response?.data?.message || 'An error occurred';
+            showAlert(message, "danger");
+        });
+}
+vbnet
+Copy code
+
+This format keeps all functions consistent and easy to read, making it straightforward for you or anyone else to understand how each part of the CRUD operations works. Let me know if you need any more adjustments!
+
+
+
+
+
