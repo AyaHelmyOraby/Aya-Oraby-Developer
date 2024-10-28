@@ -108,6 +108,7 @@ function editPostBtnClicked(postObject) {
     modalPost.toggle();
 }
 ```
+## creatingPost
 
  Creates or updates a post based on whether the post ID is present.
 ```javascript
@@ -172,6 +173,7 @@ function creatingPost() {
 
 ```
  Creates or updates a post based on whether the post ID is present.
+ ## deletePostBtnClicked
 ```javascript
 
 // Handles the click event for deleting a post.
