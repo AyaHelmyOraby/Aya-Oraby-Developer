@@ -9,8 +9,7 @@ Welcome to the JavaScript CRUD Operations guide! This document provides a compre
 4. [deletePostBtnClicked](#deletepostbtnclicked)
 5. [deletePost](#deletepost)
 
-## getPosts
-Fetches posts for a specific user and displays them in the HTML.
+## JavaScript Functions
 
 ```javascript
 function getPosts() {
@@ -80,11 +79,7 @@ function getPosts() {
             console.log(error);
         });
 }
-editPostBtnClicked
-Handles the click event for editing a post.
 
-javascript
-Copy code
 function editPostBtnClicked(postObject) {
     const postIdInput = document.getElementById("post-id-input");
     const postId = postIdInput ? postIdInput.value.trim() : '';
@@ -102,11 +97,7 @@ function editPostBtnClicked(postObject) {
     let modalPost = new bootstrap.Modal(document.getElementById("postmodal"), {});
     modalPost.toggle();
 }
-creatingPost
-Creates or updates a post based on the input fields.
 
-javascript
-Copy code
 function creatingPost() {
     const baseurl = "https://tarmeezAcademy.com/api/v1"; // Ensure there's no trailing slash
 
@@ -164,11 +155,7 @@ function creatingPost() {
         });
     }
 }
-deletePostBtnClicked
-Handles the click event for deleting a post.
 
-javascript
-Copy code
 function deletePostBtnClicked(postObjectDelete) {
     let post = JSON.parse(decodeURIComponent(postObjectDelete));
     console.log(post);
@@ -177,11 +164,7 @@ function deletePostBtnClicked(postObjectDelete) {
     let modalPost = new bootstrap.Modal(document.getElementById("deletemodal"), {});
     modalPost.toggle();
 }
-deletePost
-Deletes a post based on the post ID.
 
-javascript
-Copy code
 function deletePost() {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -194,28 +177,17 @@ function deletePost() {
     const url = `${baseurl}posts/${postId}`;
 
     const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        "Authorization": `Bearer ${token}`
     };
 
     axios.delete(url, { headers: headers })
         .then((response) => {
-            console.log(response.data);
-            showAlert("Post has been deleted successfully", "success");
-            getPosts(); // Refresh the list of posts
+            console.log("Post deleted successfully:", response.data);
+            showAlert("Post has been deleted", "success");
+            getPosts();
         })
         .catch((error) => {
-            console.error(error);
             const message = error.response?.data?.message || 'An error occurred';
             showAlert(message, "danger");
         });
 }
-vbnet
-Copy code
-
-This format keeps all functions consistent and easy to read, making it straightforward for you or anyone else to understand how each part of the CRUD operations works. Let me know if you need any more adjustments!
-
-
-
-
-
