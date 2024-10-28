@@ -11,7 +11,7 @@ Welcome to the JavaScript CRUD Operations guide! This document provides a compre
 
 ## JavaScript Functions
 
-##getposts
+## getposts
 
 ```javascript
 // Fetches posts for a specific user and displays them in the HTML.
@@ -85,7 +85,7 @@ function getPosts() {
 ```
 
 
-##editpostbtnclicked
+## editpostbtnclicked
 
 ```javascript
 
