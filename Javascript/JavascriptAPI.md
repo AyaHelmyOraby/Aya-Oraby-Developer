@@ -185,8 +185,12 @@ function deletePostBtnClicked(postObjectDelete) {
     let modalPost = new bootstrap.Modal(document.getElementById("deletemodal"), {});
     modalPost.toggle();
 }
+```
+ Deletes a post after confirmation.
+  ## deletePost
 
-// Deletes a post after confirmation.
+```javascript
+
 function deletePost() {
     const token = localStorage.getItem("token");
     if (!token) {
